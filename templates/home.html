@@ -4,87 +4,68 @@
 
 {% block content %}
 
+<!-- Home page title-->
 <div class="jumbotron jumbotron-fluid">
   <div class="container">
     <h1 class="display-4">Home Page</h1>
-    <p class="lead">Technologies used: Python, HTML, CSS, Bootstrap, Requests, BeautifulSoup, API, Github, Bash</p>
+    <p class="lead">Technologies used: Python, Flask, HTML, CSS, Bootstrap, API, BeautifulSoup, Github, Bash, Requests</p>
   </div>
 </div>
 
-
-
-<!-- TECHNOLOGIES LOGOs -->
+<!-- Technologies logo's -->
 <div class="container pt-4">
   <div class="row g-5">
-
-
     <div class="col-4 col-md-2">
       <div class="card border-0">
         <img src={{ url_for("static",filename="python_logo.jpg")}} alt="python logo" class="card-img-top">
       </div>
     </div>
-
     <div class="col-4 col-md-2">
       <div class="card border-0">
         <img src={{ url_for("static",filename="flask_logo.jpg")}} alt="flask logo" class="card-img-top">
       </div>
     </div>
-
     <div class="col-4 col-md-2">
       <div class="card border-0">
         <img src={{ url_for("static",filename="html_logo.jpg")}} alt="html logo" class="card-img-top">
       </div>
     </div>
-
     <div class="col-4 col-md-2">
       <div class="card border-0">
         <img src={{ url_for("static",filename="css_logo.jpg")}} alt="css logo" class="card-img-top">
       </div>
     </div>
-
     <div class="col-4 col-md-2">
       <div class="card border-0">
         <img src={{ url_for("static",filename="bootstrap_logo.jpg")}} alt="bootstrap logo" class="card-img-top">
       </div>
     </div>
-
     <div class="col-4 col-md-2">
       <div class="card border-0">
         <img src={{ url_for("static",filename="api_logo.jpg")}} alt="html logo" class="card-img-top">
       </div>
     </div>
-
     <div class="col-4 col-md-2">
       <div class="card border-0">
         <img src={{ url_for("static",filename="beautifulsoup_logo.jpg")}} alt="css logo" class="card-img-top">
       </div>
     </div>
-
     <div class="col-4 col-md-2">
       <div class="card border-0">
         <img src={{ url_for("static",filename="github_logo.jpg")}} alt="bootstrap logo" class="card-img-top">
       </div>
     </div>
-
     <div class="col-4 col-md-2">
       <div class="card border-0">
         <img src={{ url_for("static",filename="bash_logo.jpg")}} alt="css logo" class="card-img-top">
       </div>
     </div>
-
     <div class="col-4 col-md-2">
       <div class="card border-0">
         <img src={{ url_for("static",filename="requests_logo.jpg")}} alt="css logo" class="card-img-top">
       </div>
     </div>
-
-
-
-
-
-  
   </div>
 </div>
-
 
 {% endblock %}

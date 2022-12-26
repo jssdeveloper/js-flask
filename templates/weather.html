@@ -1,22 +1,18 @@
-
 {% extends "main_template.html" %}
-{% block title %}Weather{% endblock %}
+{% block title %}Weather API{% endblock %}
 
 {% block content %}
 
+<!-- Home page title-->
 <div class="jumbotron jumbotron-fluid">
   <div class="container">
     <h1 class="display-4">Weather API</h1>
-    <p class="date">{{ datetime }}</p>
+    <p class="lead">{{ datetime }}</p>
   </div>
 </div>
 
 <div class="container">
-  <img class="fuelwallpaper d-block w-100" src={{ url_for("static", filename = "weather.jpg")}} alt="banner">
-
-
-
-
-
+<img class="fuelwallpaper d-block w-100" src={{ url_for("static", filename = "weather_summer.jpg")}} alt="banner">
+</div>
 
 {% endblock %}
