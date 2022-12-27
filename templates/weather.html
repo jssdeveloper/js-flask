@@ -7,12 +7,25 @@
 <div class="jumbotron jumbotron-fluid">
   <div class="container">
     <h1 class="display-4">Weather API</h1>
-    <p class="lead">{{ datetime }}</p>
   </div>
 </div>
 
 <div class="container">
-<img class="fuelwallpaper d-block w-100" src={{ url_for("static", filename = "weather_summer.jpg")}} alt="banner">
+  <img class="fuelwallpaper d-block w-100" src={{ url_for("static", filename = "weather_summer.jpg")}} alt="banner">
+
+
+  <div class="card mb-4 rounded-3 shadow-sm">
+    <div class="card-body">
+      <h1 class="display-5">{{ city_name }}, {{ country }}</h1>
+      <h6 class="lead text-secondary text-center">Current Weather : {{ weather }}</h6>
+      <ul class="list-unstyled mt-3 mb-4 text-center">
+        <li><h1 class="display-5">{{ temperature }} °C</h1></li>
+      </ul>
+      
+      <input class="form-control form-control-lg text-center" type="text" placeholder="Name of the city">
+      <button type="button" class="w-100 btn btn-lg btn-outline-dark mt-2">Check weather</button>
+    </div>
+  </div>
 </div>
 
 {% endblock %}
