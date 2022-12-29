@@ -59,4 +59,40 @@ def fuel():
 	circle_milesPLUSD = circlelist[23].strip()
 	circle_autogaze = circlelist[29].strip()
 
-	return render_template("fuel.html", datetime = str(time.ctime()),c95 = circle_miles95,c98 = circle_milesPLUS98,cmilesD = circle_milesD,cplusD = circle_milesPLUSD, cgaze = circle_autogaze)
+	## GET NESTE PRICE ##
+	url_neste = requests.get("https://www.neste.lv/lv/content/degvielas-cenas")
+	nsoup = BeautifulSoup(url_neste.content,"html.parser")
+	n = (nsoup.find_all("span"))
+
+	alldata = []
+	for i in n:
+		if len(i.text) > 0:
+			alldata.append(i.text)
+	print(alldata)
+
+	n95 = alldata[3]
+	n98 = alldata[5]
+	nd = alldata[7]
+	npd = alldata[9]
+
+	## GET VIRSI PRICE ##
+	url_virsi = requests.get("https://www.virsi.lv/lv/privatpersonam/degviela/degvielas-un-elektrouzlades-cenas")
+	vsoup = BeautifulSoup(url_virsi.content,"html.parser")
+
+	v = (vsoup.find_all("p",{"class":"price"}))
+
+	nlist = []
+	for x in v:
+		if len(x.text) > 0:
+			nlist.append(repr(x.text))
+	nlist2 = []
+	for y in nlist:
+		nlist2.append(y.replace("\\","").replace("n","").replace("\"","").replace("'",""))
+	print(nlist2)
+	v95 = nlist2[1][3:]
+	v98 = nlist2[2][3:]
+	vdd = nlist2[0][2:]
+	vlpg = nlist2[4][3:]
+
+	return render_template("fuel.html", datetime = str(time.ctime()),c95 = circle_miles95,c98 = circle_milesPLUS98,cmilesD = circle_milesD,cplusD = circle_milesPLUSD, cgaze = circle_autogaze, n95=n95, n98=n98, nd=nd, npd=npd, v95=v95,v98=v98,vdd=vdd,vlpg=vlpg)
+
