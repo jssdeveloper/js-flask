@@ -10,7 +10,7 @@ def index():
 
 @app.route("/weather",methods=["POST","GET"])
 def weather():
-	def get_weather(city_name = "Nome"):
+	def get_weather(city_name):
 		API_key = "60aa068482d6ddc251ae5f53570ac5fb"
 		url = f"https://api.openweathermap.org/data/2.5/weather?q={city_name}&units=metric&appid={API_key}"
 		response = requests.get(url)
@@ -20,12 +20,21 @@ def weather():
 			country = (response.json()['sys']['country'])
 			weather = response.json()['weather'][0]['main']
 			temperature = round(response.json()['main']['temp'])
-			return {"city":city_name,"country":country,"weather":weather,"temperature":temperature}
+			return {"city":city_name,"country":country,"weather":weather,"temperature":temperature,"status":code}
 		else:
 			return("City not found")
-	weather = get_weather()
 
-	return render_template("weather.html", datetime = str(time.ctime()), temperature = weather["temperature"], weather = weather["weather"], country = weather["country"], city_name = weather["city"])
+	if request.method == "GET":
+		weather = get_weather("Riga")
+		return render_template("weather.html", datetime = str(time.ctime()), city = weather["city"],country=weather["country"],weather=weather["weather"],temperature=weather["temperature"])
+	else:
+		usrcity = request.form["usrinput"]
+		weather = get_weather(usrcity)
+		
+		if weather["status"] == 200:
+			return render_template("weather.html", datetime = str(time.ctime()), city = weather["city"],country=weather["country"],weather=weather["weather"],temperature=weather["temperature"])
+		else:
+			return "error"
 
 @app.route("/fuel")
 def fuel():
