@@ -16,14 +16,15 @@
 
   <div class="card mb-4 rounded-3 shadow-sm">
     <div class="card-body">
-      <h1 class="display-5">{{ city_name }}, {{ country }}</h1>
-      <h6 class="lead text-secondary text-center">Current Weather : {{ weather }}</h6>
+      <h1 class="display-5"> {{ city }} , {{ country }} </h1>
+      <h6 class="lead text-secondary text-center">Current Weather : {{ weather }} </h6>
       <ul class="list-unstyled mt-3 mb-4 text-center">
-        <li><h1 class="display-5">{{ temperature }} °C</h1></li>
+        <li><h1 class="display-5"> {{ temperature }} °C {{ status }}</h1></li>
       </ul>
-      
-      <input class="form-control form-control-lg text-center" type="text" placeholder="Name of the city">
-      <button type="button" class="w-100 btn btn-lg btn-outline-dark mt-2">Check weather</button>
+      <form action = "" method="post"> 
+      <input class="form-control form-control-lg text-center" type="text" name="usrinput" placeholder="Name of the city">
+      <input type="submit" class="w-100 btn btn-lg btn-outline-dark mt-2" value="Check weather">
+      </form>
     </div>
   </div>
 </div>
