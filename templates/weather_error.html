@@ -1,0 +1,29 @@
+{% extends "main_template.html" %}
+{% block title %}Weather API{% endblock %}
+
+{% block content %}
+
+<!-- Home page title-->
+<div class="jumbotron jumbotron-fluid">
+  <div class="container">
+    <h1 class="display-4">Weather API</h1>
+  </div>
+</div>
+
+<div class="container">
+  <img class="fuelwallpaper d-block w-100" src={{ url_for("static", filename = "weather_summer.jpg")}} alt="banner">
+
+
+  <div class="card mb-4 rounded-3 shadow-sm">
+    <div class="card-body">
+      <h1 class="display-5"> City not found, please try again !</h1>
+      <img class = "giff" src={{ url_for("static", filename="internet-pulp-fiction.gif")}} alt="gif">
+      <form action = "" method="post"> 
+      <input class="form-control form-control-lg text-center" type="text" name="usrinput" placeholder="Name of the city">
+      <input type="submit" class="w-100 btn btn-lg btn-outline-dark mt-2" value="Check weather">
+      </form>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

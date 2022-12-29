@@ -8,22 +8,25 @@ app = Flask(__name__)
 def index():
 	return render_template("home.html")
 
+
+## MAIN API CALL ##
+def get_weather(city_name):
+	API_key = "60aa068482d6ddc251ae5f53570ac5fb"
+	url = f"https://api.openweathermap.org/data/2.5/weather?q={city_name}&units=metric&appid={API_key}"
+	response = requests.get(url)
+	code = response.json()["cod"]
+	
+	if code == 200:
+		country = (response.json()['sys']['country'])
+		weather = response.json()['weather'][0]['main']
+		temperature = round(response.json()['main']['temp'])
+		return {"city":city_name,"country":country,"weather":weather,"temperature":temperature,"status":code}
+	else:
+		return("error")
+
+
 @app.route("/weather",methods=["POST","GET"])
 def weather():
-	def get_weather(city_name):
-		API_key = "60aa068482d6ddc251ae5f53570ac5fb"
-		url = f"https://api.openweathermap.org/data/2.5/weather?q={city_name}&units=metric&appid={API_key}"
-		response = requests.get(url)
-		code = response.json()["cod"]
-		
-		if code == 200:
-			country = (response.json()['sys']['country'])
-			weather = response.json()['weather'][0]['main']
-			temperature = round(response.json()['main']['temp'])
-			return {"city":city_name,"country":country,"weather":weather,"temperature":temperature,"status":code}
-		else:
-			return("City not found")
-
 	if request.method == "GET":
 		weather = get_weather("Riga")
 		return render_template("weather.html", datetime = str(time.ctime()), city = weather["city"],country=weather["country"],weather=weather["weather"],temperature=weather["temperature"])
@@ -31,10 +34,25 @@ def weather():
 		usrcity = request.form["usrinput"]
 		weather = get_weather(usrcity)
 		
-		if weather["status"] == 200:
+		if weather != "error":
 			return render_template("weather.html", datetime = str(time.ctime()), city = weather["city"],country=weather["country"],weather=weather["weather"],temperature=weather["temperature"])
 		else:
-			return "error"
+			return render_template("weather_error.html")
+
+
+@app.route("/weather/error",methods=["POST","GET"])
+def weather_error():
+	usrcity = request.form["usrinput"]
+	weather = get_weather(usrcity)
+	
+	if weather != "error":
+		return render_template("weather.html", datetime = str(time.ctime()), city = weather["city"],country=weather["country"],weather=weather["weather"],temperature=weather["temperature"])
+	else:
+		return render_template("weather_error.html")
+
+
+
+
 
 @app.route("/fuel")
 def fuel():
@@ -95,4 +113,3 @@ def fuel():
 	vlpg = nlist2[4][3:]
 
 	return render_template("fuel.html", datetime = str(time.ctime()),c95 = circle_miles95,c98 = circle_milesPLUS98,cmilesD = circle_milesD,cplusD = circle_milesPLUSD, cgaze = circle_autogaze, n95=n95, n98=n98, nd=nd, npd=npd, v95=v95,v98=v98,vdd=vdd,vlpg=vlpg)
-
