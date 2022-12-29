@@ -8,7 +8,6 @@ app = Flask(__name__)
 def index():
 	return render_template("home.html")
 
-
 ## MAIN API CALL ##
 def get_weather(city_name):
 	API_key = "60aa068482d6ddc251ae5f53570ac5fb"
@@ -23,7 +22,6 @@ def get_weather(city_name):
 		return {"city":city_name,"country":country,"weather":weather,"temperature":temperature,"status":code}
 	else:
 		return("error")
-
 
 @app.route("/weather",methods=["POST","GET"])
 def weather():
@@ -40,6 +38,17 @@ def weather():
 			return render_template("weather_error.html")
 
 
+
+
+
+
+
+
+
+
+
+## BONUS PART ##
+
 @app.route("/weather/error",methods=["POST","GET"])
 def weather_error():
 	usrcity = request.form["usrinput"]
@@ -49,10 +58,6 @@ def weather_error():
 		return render_template("weather.html", datetime = str(time.ctime()), city = weather["city"],country=weather["country"],weather=weather["weather"],temperature=weather["temperature"])
 	else:
 		return render_template("weather_error.html")
-
-
-
-
 
 @app.route("/fuel")
 def fuel():
