@@ -137,9 +137,9 @@ def weather_history():
 			plt.savefig("static/plot.png")
 			plt.figure().clear()
 
-
+			average_temp = round((sum(temp_avg) / len(temp_avg)),2)
 			error_msg = ""
-			return render_template("weather_history.html",date_data =date_data, temp_min = temp_min, temp_avg = temp_avg, temp_max = temp_max, coordinates=coordinates, error_msg=error_msg)
+			return render_template("weather_history.html",date_data =date_data, temp_min = temp_min, temp_avg = temp_avg, temp_max = temp_max, coordinates=coordinates, error_msg=error_msg,average_temp=average_temp)
 
 ## NOTIFICATION
 @app.route("/notification")

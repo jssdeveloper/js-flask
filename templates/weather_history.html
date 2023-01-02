@@ -18,6 +18,7 @@
     <div class="card-body">
       <h1 class="display-5">{{ error_msg }} {{ coordinates["city"] }}</h1>
       <h4 class="center">Coordinates lon: {{ coordinates["lon" ]}}, lat: {{ coordinates["lat"] }}</h4>
+      <h4 class="center">Average temperature in past year : {{ average_temp }} C</h4>
       <img class="fuelwallpaper d-block w-100" src={{ url_for("static", filename="plot.png")}} alt="plotted chart">
 
       
