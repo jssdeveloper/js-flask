@@ -9,9 +9,13 @@
 	background: rgb(0,36,15);
 	background: linear-gradient(90deg, rgba(0,36,15,1) 0%, rgba(10,0,9,1) 0%, rgba(4,19,74,1) 100%);
 }
-h1,h2,p{
+h1,h2,h3,h4,p{
 	text-align: center;
 	}
+
+.center {
+	text-align: center;
+}
 
 h1{
 	padding-top: 1rem;
