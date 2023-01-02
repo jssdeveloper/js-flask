@@ -2,7 +2,11 @@ from flask import Flask, render_template, url_for, request
 import time
 import datetime
 import requests
+import matplotlib
+matplotlib.use('agg')
+
 import matplotlib.pyplot as plt
+
 
 app = Flask(__name__)
 
@@ -119,12 +123,19 @@ def weather_history():
 			date_data = list(date[0] for date in daily_temperature)
 			temp_min = list(min[1] for min in daily_temperature)
 			temp_avg = list(avg[2] for avg in daily_temperature)
-			temp_max = list(max[2] for max in daily_temperature)
+			temp_max = list(max[3] for max in daily_temperature)
 
-			def plot():
-				plt.plot(temp_min)
-				plt.savefig("static/plot.png")
-			plot()
+			plt.figure(figsize=(15, 6), dpi=80)
+			plt.plot(date_data,temp_min, label = "Temp Min", color="blue")
+			plt.plot(date_data,temp_avg, label = "Temp Avg", color="green")
+			plt.plot(date_data,temp_max, label = "Temp Max", color="red")
+
+			#plt.plot(temp_max)
+			plt.xlabel("Date")
+			plt.ylabel("Degrees C")
+			plt.legend()
+			plt.savefig("static/plot.png")
+			plt.figure().clear()
 
 
 			error_msg = ""

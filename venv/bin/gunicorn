@@ -1,4 +1,4 @@
-#!/Users/janisstals/Desktop/jssdeveloper/js-flask-prakse/venv/bin/python3
+#!/Users/janisstals/Desktop/week3/js-flask/venv/bin/python3
 # -*- coding: utf-8 -*-
 import re
 import sys

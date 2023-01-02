@@ -18,11 +18,8 @@
     <div class="card-body">
       <h1 class="display-5">{{ error_msg }} {{ coordinates["city"] }}</h1>
       <h4 class="center">Coordinates lon: {{ coordinates["lon" ]}}, lat: {{ coordinates["lat"] }}</h4>
-      <img src={{ url_for("static", filename="plot.png")}} alt="">
-      <p>Dates : {{ date_data }}</p>
-      <p>Temp Min : {{ temp_min }}</p>
-      <p>Temp Avg : {{ temp_avg }}</p>
-      <p>Temp Max : {{ temp_max }}</p>
+      <img class="fuelwallpaper d-block w-100" src={{ url_for("static", filename="plot.png")}} alt="plotted chart">
+
       
       <form action = "" method="post"> 
       <input class="form-control form-control-lg text-center" type="text" name="cdinput" placeholder="Enter Name of the city">
