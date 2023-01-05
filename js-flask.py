@@ -1,20 +1,28 @@
-from flask import Flask, render_template, url_for, request
+from flask import Flask, render_template, url_for, request, send_file
 import time
 import datetime
 import requests
 import matplotlib
 matplotlib.use('agg')
-
 import matplotlib.pyplot as plt
-
 
 app = Flask(__name__)
 
+
+##-------------------------------------------------------------------------------------------
+## HOME ROUTE
+##-------------------------------------------------------------------------------------------
 @app.route("/")
 def index():
 	return render_template("home.html")
+##-------------------------------------------------------------------------------------------
 
-## MAIN API CALL ##
+
+
+
+##-------------------------------------------------------------------------------------------
+## MAIN API CALL FUNCTION
+##-------------------------------------------------------------------------------------------
 def get_weather(city_name):
 	API_key = "0951ebb00319e01258d421af9baa3d0c"
 	url = f"https://api.openweathermap.org/data/2.5/weather?q={city_name}&units=metric&appid={API_key}"
@@ -28,7 +36,14 @@ def get_weather(city_name):
 		return {"city":city_name,"country":country,"weather":weather,"temperature":temperature,"status":code}
 	else:
 		return("error")
+##-------------------------------------------------------------------------------------------
 
+
+
+
+##-------------------------------------------------------------------------------------------
+## ROUTE WEATHER API WITHOUT CHART
+##-------------------------------------------------------------------------------------------
 @app.route("/weather",methods=["POST","GET"])
 def weather():
 	if request.method == "GET":
@@ -43,12 +58,28 @@ def weather():
 		else:
 			return render_template("weather_error.html")
 
-## WEATHER HISTORY
+## Route for weather error
+@app.route("/weather/error",methods=["POST","GET"])
+def weather_error():
+	usrcity = request.form["usrinput"]
+	weather = get_weather(usrcity)
+	
+	if weather != "error":
+		return render_template("weather.html", datetime = str(time.ctime()), city = weather["city"],country=weather["country"],weather=weather["weather"],temperature=weather["temperature"])
+	else:
+		return render_template("weather_error.html")
+##-------------------------------------------------------------------------------------------
+
+
+
+##-------------------------------------------------------------------------------------------
+## WEATHER HISTORY ROUTE
+##-------------------------------------------------------------------------------------------
 @app.route("/weather_history",methods = ["GET","POST"])
 def weather_history():
 
 	if request.method == "GET":
-		return render_template("weather_history.html",coordinates="")
+		return render_template("weather_history_get.html",coordinates="")
 
 	else:
 
@@ -75,6 +106,7 @@ def weather_history():
 		else:
 
 			## HISTORY PART ------------------------------------------------------------------
+			## Connect to API with coordinates in payload
 			history_key = "8a66acc84emsh6448231a3a489fap1ad41cjsn971b51d14b87"
 			def get_closest_station(coordinates):
 				querystring = {"lat":coordinates["lat"],"lon":coordinates["lon"]}
@@ -109,9 +141,7 @@ def weather_history():
 				return(response.json()["data"])
 
 			history_data = get_history(closest_station)
-			#print(history_data)
 
-			## Output Object for CSV
 			daily_temperature = []
 
 			## Removing days when station did not report data
@@ -125,41 +155,81 @@ def weather_history():
 			temp_avg = list(avg[2] for avg in daily_temperature)
 			temp_max = list(max[3] for max in daily_temperature)
 
+
+			## Drawing chart with min, avg, max temperatures
 			plt.figure(figsize=(15, 6), dpi=80)
 			plt.plot(date_data,temp_min, label = "Temp Min", color="blue")
 			plt.plot(date_data,temp_avg, label = "Temp Avg", color="green")
 			plt.plot(date_data,temp_max, label = "Temp Max", color="red")
 
 			#plt.plot(temp_max)
+			plt.title(f"{city_name} {past_date} - {current_date}")
 			plt.xlabel("Date")
 			plt.ylabel("Degrees C")
 			plt.legend()
-			plt.savefig("static/plot.png")
+
+			plt.tick_params(axis="x", labelrotation=90)
+			plt.tick_params(axis="x",which="major",length=10, width="2.5")
+			plt.xticks(fontsize=5,fontweight="bold")
+			plt.show()
+			plt.savefig("static/plot.jpg")
+			plt.savefig("static/plot.pdf")
 			plt.figure().clear()
 
 			average_temp = round((sum(temp_avg) / len(temp_avg)),2)
-			error_msg = ""
-			return render_template("weather_history.html",date_data =date_data, temp_min = temp_min, temp_avg = temp_avg, temp_max = temp_max, coordinates=coordinates, error_msg=error_msg,average_temp=average_temp)
+			
+			## GET MINIMUM TEMPERATURE
+			absolute_minimum = min(temp_min)
+			minimum_index = temp_min.index(absolute_minimum)
+			minimum_date = date_data[minimum_index]
 
-## NOTIFICATION
+
+			## GET MAXIMUM TEMPERATURE
+			absolute_maximum = max(temp_max)
+			maximum_index = temp_max.index(absolute_maximum)
+			print("maximum:", absolute_maximum)
+			maximum_date = date_data[maximum_index]
+
+
+			## GENERATE RAW DATA FILE
+			with open("static/weatherdata.csv","w") as rawdatafile:
+				rawdatafile.write("Date,Min Temperature,Max Temperature,Avg Temperature\n")
+				for data in range(len(temp_min)):
+					rawdatafile.write(f"{date_data[data]},{temp_min[data]},{temp_max[data]},{temp_avg[data]}\n")
+
+			error_msg = ""
+			return render_template("weather_history.html",date_data =date_data, temp_min = temp_min, temp_avg = temp_avg, temp_max = temp_max,coordinates=coordinates, error_msg=error_msg,average_temp=average_temp,absolute_minimum=absolute_minimum,minimum_date=minimum_date,absolute_maximum=absolute_maximum,maximum_date=maximum_date)
+
+
+## DOWNLOAD CSV
+@app.route("/weather_history/csv")
+def download_csv():
+	path = "static/weatherdata.csv"
+	return send_file(path,as_attachment=True)
+
+## DOWNLOAD PDF
+@app.route("/weather_history/pdf")
+def download_pdf():
+	path = "static/plot.pdf"
+	return send_file(path,as_attachment=True)
+	
+
+
+##-------------------------------------------------------------------------------------------
+## NOTIFICATION SIGNL4
+##-------------------------------------------------------------------------------------------
 @app.route("/notification")
 def notifiaction():
 	return"notification page"
+##-------------------------------------------------------------------------------------------
 
 
 
-## BONUS PART ##
 
-@app.route("/weather/error",methods=["POST","GET"])
-def weather_error():
-	usrcity = request.form["usrinput"]
-	weather = get_weather(usrcity)
-	
-	if weather != "error":
-		return render_template("weather.html", datetime = str(time.ctime()), city = weather["city"],country=weather["country"],weather=weather["weather"],temperature=weather["temperature"])
-	else:
-		return render_template("weather_error.html")
 
+##-------------------------------------------------------------------------------------------
+## FUEL SCRAPE
+##-------------------------------------------------------------------------------------------
 @app.route("/fuel")
 def fuel():
 	from bs4 import BeautifulSoup
@@ -219,3 +289,4 @@ def fuel():
 	vlpg = nlist2[4][3:]
 
 	return render_template("fuel.html", datetime = str(time.ctime()),c95 = circle_miles95,c98 = circle_milesPLUS98,cmilesD = circle_milesD,cplusD = circle_milesPLUSD, cgaze = circle_autogaze, n95=n95, n98=n98, nd=nd, npd=npd, v95=v95,v98=v98,vdd=vdd,vlpg=vlpg)
+	##-------------------------------------------------------------------------------------------

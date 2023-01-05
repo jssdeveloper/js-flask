@@ -18,13 +18,18 @@
     <div class="card-body">
       <h1 class="display-5">{{ error_msg }} {{ coordinates["city"] }}</h1>
       <h4 class="center">Coordinates lon: {{ coordinates["lon" ]}}, lat: {{ coordinates["lat"] }}</h4>
+      <h4 class="center">Minimum temperature in past year : {{ absolute_minimum }}C on {{ minimum_date }}</h4>
       <h4 class="center">Average temperature in past year : {{ average_temp }} C</h4>
-      <img class="fuelwallpaper d-block w-100" src={{ url_for("static", filename="plot.png")}} alt="plotted chart">
+      <h4 class="center">Maximum temperature in past year : {{ absolute_maximum }}C on {{ maximum_date }}</h4>
+      
+      <img class="fuelwallpaper d-block w-100" src={{ url_for("static", filename="plot.jpg")}} alt="plotted chart">
 
       
       <form action = "" method="post"> 
       <input class="form-control form-control-lg text-center" type="text" name="cdinput" placeholder="Enter Name of the city">
       <input type="submit" class="w-100 btn btn-lg btn-outline-dark mt-2" value="Get history">
+      <a class="w-100 btn btn-lg btn-outline-dark mt-2" href="{{ url_for("download_csv") }}">Download CSV File</a>
+      <a class="w-100 btn btn-lg btn-outline-dark mt-2" href="{{ url_for("download_pdf") }}">Download PDF File</a>
       </form>
 
     </div>
