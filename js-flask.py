@@ -183,7 +183,6 @@ def weather_history():
 			minimum_index = temp_min.index(absolute_minimum)
 			minimum_date = date_data[minimum_index]
 
-
 			## GET MAXIMUM TEMPERATURE
 			absolute_maximum = max(temp_max)
 			maximum_index = temp_max.index(absolute_maximum)
